@@ -3,12 +3,16 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
+import Success from './components/Success'
+import Error from './components/Error'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -30,8 +34,16 @@ const App = () => {
         personService
           .updateNumber(changedPerson.id, changedPerson)
           .then(returnedPerson => {
-            setPersons(persons.map(person => person.id === returnedPerson.id ? returnedPerson : person))
+            setPersons(persons.map(person => person.id === returnedPerson.id ? returnedPerson : person))       
+            setSuccessMessage(
+              `Updated ${returnedPerson.name}`
+            ) 
           })
+
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+
       }
     } else {
       const personObject = {
@@ -45,7 +57,14 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          setSuccessMessage(
+            `Added ${returnedPerson.name}`
+          ) 
         })
+      
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
     }
   }
 
@@ -59,6 +78,14 @@ const App = () => {
         .then(
           setPersons(persons.filter(person => person.id !== id))
         )
+        .catch(error => {
+          setErrorMessage(
+            `Information of ${person} has already removed from server`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
     }
   }
 
@@ -84,6 +111,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Success message={successMessage}/>
+      <Error message = {errorMessage}/>
 
       <Filter 
         searchQuery={searchQuery}

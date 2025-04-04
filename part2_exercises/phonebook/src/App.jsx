@@ -61,6 +61,9 @@ const App = () => {
             `Added ${returnedPerson.name}`
           ) 
         })
+        .catch(error => {
+          setErrorMessage(error.response.data.error) 
+        })
       
         setTimeout(() => {
           setSuccessMessage(null)

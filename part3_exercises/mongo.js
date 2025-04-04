@@ -7,8 +7,6 @@ const url = `mongodb+srv://monster159284:${password}@fullstackopen.srxojiq.mongo
 mongoose.set('strictQuery', false)
 mongoose.connect(url)
 
-
-
 const personSchema = new mongoose.Schema({
     name: String,
     number: String

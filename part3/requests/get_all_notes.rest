@@ -6,6 +6,18 @@ POST http://localhost:3001/api/notes
 content-type: application/json
 
 {
-    "content": "Postman is good in testing backend",
-    "important": true
+    "content": "user id of note is sent with request",
+    "important": true,
+    "userId": "67f2d3f6d6fd94bb68d62896"
+}
+
+###
+
+POST http://localhost:3001/api/users
+content-type: application/json
+
+{
+    "username": "root",
+    "name": "Superuser",
+    "password": "salaianen"
 }

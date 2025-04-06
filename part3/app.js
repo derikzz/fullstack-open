@@ -1,4 +1,6 @@
 const express = require('express')
+require('express-async-errors')
+const cors = require('cors')
 const mongoose = require('mongoose')
 const config = require('./utils/config')
 const logger = require('./utils/logger')
@@ -20,6 +22,7 @@ mongoose
 
 app.use(express.static('dist'))
 app.use(express.json())
+app.use(cors())
 app.use(middleware.requestLogger)
 
 app.use('/api/notes', notesRouter)

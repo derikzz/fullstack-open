@@ -1,9 +1,11 @@
 const { test, after, beforeEach, describe } = require('node:test')
 const assert = require('node:assert')
+const bcrypt = require('bcryptjs')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
 
 const api = supertest(app)
@@ -133,8 +135,78 @@ describe.only('when we are deleting a blog', () => {
       .delete(`/api/blogs/${blogToDelete.id}`)
       .expect(204)
 
-      const blogsAfter = await helper.blogsInDb()
-      assert.strictEqual(blogsAfter.length, helper.initialBlogs.length - 1)
+    const blogsAfter = await helper.blogsInDb()
+    assert.strictEqual(blogsAfter.length, helper.initialBlogs.length - 1)
+  })
+})
+
+describe.only('when there is initially one user in the database', () => {
+  beforeEach(async () => {
+    await User.deleteMany()
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({username: 'root', passwordHash})
+
+    await user.save()
+  })
+
+  test('creation only succeeds when conditions met', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'dz894',
+      name: 'derik zhu',
+      password: 'hello world'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtStart.length + 1, usersAtEnd.length)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    assert(usernames.includes(newUser.username))
+  })
+
+  test('creation fails when username is shorter than 3 characters', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'dz',
+      name: 'derik zhu',
+      password: 'hello world'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtStart.length, usersAtEnd.length)
+  })
+
+  test('creation fails when username is not unique', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'root',
+      name: 'derik zhu',
+      password: 'hello world'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtStart.length, usersAtEnd.length)
+    assert(result.body.error.includes('expected `username` to be unique'))
   })
 })
 

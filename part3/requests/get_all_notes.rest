@@ -3,12 +3,12 @@ GET http://localhost:3001/api/notes
 ###
 
 POST http://localhost:3001/api/notes
-content-type: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY3ZjJkM2Y2ZDZmZDk0YmI2OGQ2Mjg5NiIsImlhdCI6MTc0Mzk4MzI0Nn0.rIAT8w3ifenG8EIWNy4_aaAbiEMY_M2jYw6Bu0y0e6Y
 
 {
-    "content": "user id of note is sent with request",
-    "important": true,
-    "userId": "67f2d3f6d6fd94bb68d62896"
+    "content": "note is sent with authorization",
+    "important": true
 }
 
 ###
@@ -19,5 +19,15 @@ content-type: application/json
 {
     "username": "root",
     "name": "Superuser",
+    "password": "salaianen"
+}
+
+###
+
+post http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+    "username": "root",
     "password": "salaianen"
 }

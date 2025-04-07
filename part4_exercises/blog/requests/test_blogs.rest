@@ -1,5 +1,6 @@
 POST http://localhost:3003/api/blogs
-content-type: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImR6ODk0IiwiaWQiOiI2N2YzNWU1NmZhNzVjM2VhY2EwN2Q5ODgiLCJpYXQiOjE3NDQwNjA4MDR9.tTxiQDNk0jUFfz6BjY2DJ-49Kc8F0WCRN7XgmJGUB8Y
 
 {
     "title": "hello",
@@ -7,3 +8,30 @@ content-type: application/json
     "url": "world", 
     "likes": "1"
 }
+
+###
+
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "dz894",
+    "name": "Derik Zhu",
+    "password": "lol1234"
+}
+
+###
+
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "dz894",
+    "password": "lol1234"
+}
+
+###
+
+DELETE http://localhost:3003/api/blogs/67f44921b64ce47a14eebcc8
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImR6ODk0IiwiaWQiOiI2N2YzNWU1NmZhNzVjM2VhY2EwN2Q5ODgiLCJpYXQiOjE3NDQwNjA4MDR9.tTxiQDNk0jUFfz6BjY2DJ-49Kc8F0WCRN7XgmJGUB8Y
